@@ -10,15 +10,9 @@ import SwiftUI
 struct UploadView: View {
     @Environment(\.colorScheme) var colorScheme
     @State private var showingImagePicker = false
-    @State private var imageSelected = UIImage(named: "logo.slattgram")!
+    @State private var imageSelected = UIImage(named: "logo")!
     @State private var sourceType: UIImagePickerController.SourceType = .camera
     @State private var showingUploadDetails = false
-    
-//    init() {
-//        UITabBar.appearance().backgroundColor = UIColor.black
-//        UITabBar.appearance().barTintColor = UIColor.black
-//        UITabBar.appearance().unselectedItemTintColor = UIColor.white
-//    }
     
     var body: some View {
         ZStack {
@@ -68,7 +62,7 @@ struct UploadView: View {
                 Spacer()
                 
                 Rectangle()
-                    .fill(Color("ColorWhiteBlack"))
+                    .fill(Color.MyTheme.whiteBlack)
                     .frame(height: 85)
                     .frame(maxWidth: .infinity)
             }

@@ -15,7 +15,7 @@ struct ContentView: View {
         TabView {
             NavigationStack {
                 FeedView(posts: PostArrayObject())
-                    .toolbarBackground(Color("ColorWhiteBlack"), for: .tabBar, .navigationBar)
+                    .toolbarBackground(Color.MyTheme.whiteBlack, for: .tabBar, .navigationBar)
             }
             .tabItem {
                 Image(systemName: "book")
@@ -25,7 +25,7 @@ struct ContentView: View {
             
             NavigationStack {
                 BrowseView()
-                    .toolbarBackground(Color("ColorWhiteBlack"), for: .tabBar, .navigationBar)
+                    .toolbarBackground(Color.MyTheme.whiteBlack, for: .tabBar, .navigationBar)
             }
             .tabItem {
                 Image(systemName: "magnifyingglass")
@@ -43,11 +43,11 @@ struct ContentView: View {
                 if currentUserID != nil {
                     NavigationStack {
                         ProfileView(profileDisplayName: "My Profile", profileUserID: "", isMyProfile: true)
-                            .toolbarBackground(Color("ColorWhiteBlack"), for: .tabBar, .navigationBar)
+                            .toolbarBackground(Color.MyTheme.whiteBlack, for: .tabBar, .navigationBar)
                     }
                 } else {
                     SignUpView()
-                        .toolbarBackground(Color("ColorWhiteBlack"), for: .tabBar, .navigationBar)
+                        .toolbarBackground(Color.MyTheme.whiteBlack, for: .tabBar, .navigationBar)
                 }
             }
             .tabItem {

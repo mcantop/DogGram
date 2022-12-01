@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct OnboardingNextView: View {
     @Environment(\.dismiss) var dismiss
@@ -14,6 +15,7 @@ struct OnboardingNextView: View {
     @State private var showingImagePicker = false
     @State private var imageSelected = UIImage(named: "logo")!
     @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
+    @State var user: User
     
     var body: some View {
         VStack(spacing: 24) {
@@ -29,6 +31,7 @@ struct OnboardingNextView: View {
 
                 Spacer()
             }
+            
             Spacer()
             
             Text("What's your name?")
@@ -44,6 +47,8 @@ struct OnboardingNextView: View {
             
             Button {
                 showingImagePicker.toggle()
+                print(user.displayName ?? "")
+                
             } label: {
                 Text("Finish: Add profile picture")
                     .foregroundColor(Color.MyTheme.purpleColor)
@@ -58,26 +63,35 @@ struct OnboardingNextView: View {
             .animation(.easeInOut(duration: 0.25), value: username)
 
             Spacer()
+            
             Spacer()
         }
         .preferredColorScheme(.light)
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.MyTheme.purpleColor)
-        .sheet(isPresented: $showingImagePicker, onDismiss: createProfile) {
+        .sheet(isPresented: $showingImagePicker, onDismiss: register) {
             ImagePicker(imageSelected: $imageSelected, sourceType: $sourceType)
                 .preferredColorScheme(.dark)
                 .accentColor( Color.MyTheme.greenColor)
         }
     }
     
-    func createProfile() {
-        print("DEBUG: Create profile here..")
+    func register() {
+        AuthViewModel.shared.register(withProvider: "Google", user: user, username: username, image: imageSelected) { result in
+
+            switch result {
+            case .failure(let error):
+                print("DEBUG: Couldn't register a new user with error - \(error.localizedDescription)")
+            case .success:
+                print("DEBUG: Successfully registerd user")
+            }
+        }
     }
 }
 
-struct OnboardingNextView_Previews: PreviewProvider {
-    static var previews: some View {
-        OnboardingNextView()
-    }
-}
+//struct OnboardingNextView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        OnboardingNextView()
+//    }
+//}

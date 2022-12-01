@@ -6,11 +6,16 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct OnboardingView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) private var dismiss
     @State private var showingOnboardingNext = false
+    @State private var showingError = false
+    @State private var errorMessage = ""
+    @State private var isLoading = false
+    @State private var user: User?
     
     var body: some View {
         VStack(spacing: 24) {
@@ -32,7 +37,7 @@ struct OnboardingView: View {
                 .fontWeight(.medium)
                 .multilineTextAlignment(.center)
                 .foregroundColor(colorScheme == .light ? Color.MyTheme.purpleColor :  Color.MyTheme.beigeColor)
-
+            
             VStack(spacing: 12) {
                 Button {
                     showingOnboardingNext.toggle()
@@ -43,7 +48,18 @@ struct OnboardingView: View {
                 }
                 
                 Button {
-                    showingOnboardingNext.toggle()
+                    isLoading.toggle()
+                    GoogleService.SigIn(rootViewController: getRootViewController()) { result in
+                        switch result {
+                        case .failure(let error):
+                            errorMessage = error.localizedDescription
+                            showingError.toggle()
+                        case .success(let user):
+                            self.user = user
+                            isLoading.toggle()
+                            showingOnboardingNext.toggle()
+                        }
+                    }
                 } label: {
                     Label("Sign in with Google", systemImage: "globe")
                         .font(.system(size: 22, weight: .medium, design: .default))
@@ -70,8 +86,30 @@ struct OnboardingView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(colorScheme == .light ? Color.MyTheme.beigeColor : Color.MyTheme.purpleColor)
         .fullScreenCover(isPresented: $showingOnboardingNext) {
-            OnboardingNextView()
+            if let user = user {
+                OnboardingNextView(user: user)
+            }
         }
+        .alert("Error", isPresented: $showingError) {
+            Button("Close", role: .cancel) { isLoading.toggle() }
+        } message: {
+            Text(errorMessage)
+        }
+        .overlay(
+            ZStack {
+                if isLoading {
+                    Color.black
+                        .opacity(0.25)
+                        .ignoresSafeArea()
+                    
+                    ProgressView()
+                        .font(.largeTitle)
+                        .frame(width: 80, height: 80)
+                        .background(Color.MyTheme.whiteBlack)
+                        .cornerRadius(15)
+                }
+            }
+        )
     }
 }
 

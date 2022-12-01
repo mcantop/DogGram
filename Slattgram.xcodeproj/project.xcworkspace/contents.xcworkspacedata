@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:/Users/maciej/Documents/iOS Development/SwiftUI Projects/DogGram/Slattgram.xcodeproj">
+      location = "self:">
    </FileRef>
 </Workspace>
